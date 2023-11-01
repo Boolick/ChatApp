@@ -1,22 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  messages: [],
+  chats: {},
 };
 
 const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    addIncommingMessage(state, action) {
-      state.messages.push({text:action.payload, isIncomming: true});
-    },
-    addOutgoingMessage(state, action) {
-      state.messages.push({text:action.payload, isIncomming: false});
+    addMessage(state, action) {
+      const { chatId, message } = action.payload;
+      if (!state.chats[chatId]) {
+        state.chats[chatId] = [];
+      }
+      state.chats[chatId].push(message);
     },
   },
 });
 
-export const { addIncommingMessage, addOutgoingMessage } = chatSlice.actions;
+export const { addMessage } = chatSlice.actions;
 
 export default chatSlice.reducer;

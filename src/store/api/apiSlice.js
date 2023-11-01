@@ -29,6 +29,12 @@ export const apiSlice = createApi({
         method: "DELETE",
       }),
     }),
+    getStateInstance: builder.query({
+      query: ({ idInstance, apiTokenInstance }) => ({
+        url: `https://api.green-api.com/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -36,4 +42,5 @@ export const {
   useSendMessageMutation,
   useLazyReceiveNotificationQuery,
   useDeleteNotificationMutation,
+  useGetStateInstanceQuery,
 } = apiSlice;

@@ -6,54 +6,78 @@ import {
   useLazyReceiveNotificationQuery,
   useDeleteNotificationMutation,
 } from "../store/api/apiSlice";
-import {
-  addIncommingMessage,
-  /*  addOutgoingMessage, */
-} from "../store/reducers/chatReducer";
+
+import { addMessage } from "../store/reducers/chatReducer";
+import { MessageBox } from "./styles";
+import Sidebar from "./Sidebar";
 
 function Chat() {
   const dispatch = useDispatch();
-  const messages = useSelector((state) => state.chat.messages);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const messages = useSelector((state) => state.chat.chats[activeChatId] || []);
   const [newMessage, setNewMessage] = useState("");
   const [receiptId, setReceiptId] = useState(null);
   const [sendMessage] = useSendMessageMutation();
   const [trigger, result] = useLazyReceiveNotificationQuery();
   const [deleteNotification] = useDeleteNotificationMutation();
+  const { phoneNumber, idInstance, apiTokenInstance } = useSelector(
+    (state) => state.user
+  ); /* "84359237442@c.us"; */
+  const chatId = `${phoneNumber}@c.us`;
 
   useEffect(() => {
     if (result.data) {
       console.log(result?.data.receiptId);
+      setActiveChatId(chatId);
       setReceiptId(result?.data.receiptId);
-      if (
-        (result?.data.body.typeWebhook === "outgoingAPIMessageReceived" ||
-          result?.data.body.typeWebhook === "outgoingMessageReceived") &&
-        result?.data.body.messageData &&
-        result?.data.body.messageData.extendedTextMessageData
-      ) {
-        const textMessage =
-          result?.data.body.messageData.extendedTextMessageData.text;
+      if (result?.data.body.messageData) {
+        let textMessage;
+        let isIncoming;
+        switch (result?.data.body.typeWebhook) {
+          case "incomingMessageReceived":
+            textMessage =
+              result?.data.body.messageData.textMessageData?.textMessage;
+            isIncoming = true;
+            break;
+          case "outgoingMessageReceived":
+            textMessage =
+              result?.data.body.messageData.extendedTextMessageData?.text ||
+              result?.data.body.messageData.textMessageData?.textMessage;
+            isIncoming = false;
+            break;
+          case "outgoingAPIMessageReceived":
+            textMessage =
+              result?.data.body.messageData.extendedTextMessageData?.text;
+            isIncoming = false;
+            break;
+          default:
+            return;
+        }
+
         if (!messages.some((message) => message.text === textMessage)) {
-          dispatch(addIncommingMessage(textMessage));
+          dispatch(
+            addMessage({ chatId, message: { text: textMessage, isIncoming } })
+          );
         }
       }
     }
-  }, [dispatch, result]);
+  }, [result]);
 
   useEffect(() => {
     if (receiptId) {
       deleteNotification({
-        idInstance: 7103858998,
-        apiTokenInstance: "d7cb43057842413c9b1ac50f79bf5d316b4f078a52ac4b52bf",
+        idInstance,
+        apiTokenInstance,
         receiptId,
       });
     }
-  }, [receiptId]);
+  }, [deleteNotification, receiptId]);
 
   const handleSendMessage = async () => {
     await sendMessage({
-      idInstance: 7103858998,
-      apiTokenInstance: "d7cb43057842413c9b1ac50f79bf5d316b4f078a52ac4b52bf",
-      chatId: "84359237442@c.us",
+      idInstance,
+      apiTokenInstance,
+      chatId,
       message: newMessage,
     });
 
@@ -62,25 +86,35 @@ function Chat() {
 
   const handleReceiveMessages = async () => {
     await trigger({
-      idInstance: 7103858998,
-      apiTokenInstance: "d7cb43057842413c9b1ac50f79bf5d316b4f078a52ac4b52bf",
+      idInstance,
+      apiTokenInstance,
     });
+  };
+  const chatIds = Object.keys(useSelector((state) => state.chat.chats));
+
+  const handleChatClick = (chatId) => {
+    setActiveChatId(chatId);
   };
 
   return (
-    <div>
-      {messages.map((message, index) => (
-        <p key={index}>{message.text}</p>
-      ))}
-      <input
-        type="text"
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-      />
-      <button onClick={handleSendMessage}>Send</button>
-      <button onClick={handleReceiveMessages}>receiveNotification</button>
-      {/* <button onClick={handleDeleteMessage}>DeleteNotification</button> */}
-    </div>
+    <>
+      <Sidebar chatIds={chatIds} onChatClick={handleChatClick} />
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {messages.map((message, index) => (
+          <MessageBox key={index} isIncoming={message.isIncoming}>
+            {message.text}
+          </MessageBox>
+        ))}
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button onClick={handleSendMessage}>Send</button>
+        <button onClick={handleReceiveMessages}>receiveNotification</button>
+        {/* <button onClick={handleDeleteMessage}>DeleteNotification</button> */}
+      </div>
+    </>
   );
 }
 
