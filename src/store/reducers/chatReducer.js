@@ -13,7 +13,7 @@ const chatSlice = createSlice({
       if (!state.chats[chatId]) {
         state.chats[chatId] = [];
       }
-      state.chats[chatId].push(message);
+      state.chats[chatId].push({ ...message, id: action.payload.id });
     },
   },
 });

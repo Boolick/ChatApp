@@ -18,7 +18,7 @@ const LoginPage = () => {
   const [apiTokenInstance, setApiTokenInstances] = useState(
     "d7cb43057842413c9b1ac50f79bf5d316b4f078a52ac4b52bf"
   );
-  const [phoneNumber, setInputValue] = useState("84359237442");
+  const [phoneNumber, setInputValue] = useState(84359237442);
   const [wrongPhoneNumber, setWrongPhoneNumber] = useState("");
   const [wrongIdInstance, setWrongIdInstance] = useState("");
 
@@ -64,7 +64,7 @@ const LoginPage = () => {
       setWrongPhoneNumber("Номер телефона должен быть числом");
     } else {
       setWrongPhoneNumber("");
-      setInputValue(e.target.value);
+      setInputValue(Number(e.target.value));
     }
   };
 

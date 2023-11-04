@@ -4,7 +4,7 @@ import { apiSlice } from "./api/apiSlice";
 import chatReducer from "./reducers/chatReducer";
 import userReducer from "./reducers/userSlice";
 
-export default configureStore({
+ const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     chat: chatReducer,
@@ -24,3 +24,5 @@ export interface RootState {
   user: User;
    
 }
+
+export default store;

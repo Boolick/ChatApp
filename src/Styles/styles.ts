@@ -10,6 +10,15 @@ export const Container = styled.div`
   color: #888;
   background-color: #111b21;
 `;
+export const MessageContainer = styled.div`
+  padding-bottom: 80px;
+  margin-left: 30vw;
+  display: flex;
+  flex-direction: column;
+  color: #888;
+  background-color: #111b21;
+  justify-content: flex-end;
+`;
 export const StyledLoginForm = styled.form`
   display: flex;
   flex-direction: column;
