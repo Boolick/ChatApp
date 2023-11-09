@@ -1,24 +1,25 @@
 import React from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
-import { List } from "../Styles/styles";
-
-import checkWhatsApp from "../Utils/checkWhatsApp";
-import { RootState } from "../store/store";
+import {
+  UserForm,
+  SearchInput,
+  UserBox,
+  StyledButton,
+  StyledTextError,
+} from "../Styles/styles";
 
 function User({ chatIds, setChatIds }) {
   const [phoneNumbers, setPhoneNumbers] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [wrongPhoneNumber, setWrongPhoneNumber] = useState("");
-  const { idInstance, apiTokenInstance, phoneNumber } = useSelector(
-    (state: RootState) => state.user
-  );
+  const [placeholder, setPlaceholder] = useState("Введите номер телефона");
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
+    setPlaceholder("Введите номер телефона");
     if (isNaN(value)) {
-      setWrongPhoneNumber("Номер телефона должен быть числом");
+      setWrongPhoneNumber("Тут должно быть число");
     } else {
       setWrongPhoneNumber("");
       setInputValue(e.target.value);
@@ -27,38 +28,38 @@ function User({ chatIds, setChatIds }) {
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim() !== "") {
-      const exitstsWhatsApp = await checkWhatsApp(
-        Number(inputValue),
-        idInstance,
-        apiTokenInstance
-      );
-      if (exitstsWhatsApp) {
-        setPhoneNumbers([...phoneNumbers, Number(inputValue)]);
+    if (inputValue) {
+      const phoneNumberToAdd = Number(inputValue);
+      if (!phoneNumbers.some((number) => number === phoneNumberToAdd)) {
+        setPhoneNumbers([...phoneNumbers, phoneNumberToAdd]);
         setInputValue("");
         setChatIds([...chatIds, `${inputValue}@c.us`]);
       } else {
-        console.log("Номер не зарегистрирован в WhatsApp");
+        setInputValue("");
+        setPlaceholder("Номер уже добавлен!");
       }
+    } else {
+      setPlaceholder("Не может быть пустым!");
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handlePhoneSubmit}>
+    <UserBox>
+      <UserForm onSubmit={handlePhoneSubmit}>
         <label>
-          <input
+          <SearchInput
             type="text"
             value={inputValue}
             onChange={handlePhoneChange}
-            placeholder="Phone Number"
+            placeholder={placeholder}
           />
-          {wrongPhoneNumber && <p>{wrongPhoneNumber}</p>}
+          {wrongPhoneNumber && (
+            <StyledTextError>{wrongPhoneNumber}</StyledTextError>
+          )}
         </label>
-        <button type="submit">Добавить номер</button>
-      </form>
-      <List>{phoneNumber && <p>Текущий пользователь: {phoneNumber}</p>}</List>
-    </div>
+        <StyledButton type="submit">Добавить номер</StyledButton>
+      </UserForm>
+    </UserBox>
   );
 }
 export default User;

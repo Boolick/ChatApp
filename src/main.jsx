@@ -6,10 +6,14 @@ import App from "./App";
 import "./index.css";
 import store from "./store/store";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
-);
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  );
+}

@@ -2,22 +2,70 @@ import { ReactNode } from "react";
 import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
-  width: 900vw;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  width: 100vw;
   margin: 0 auto;
-  padding: 2vw;
-  text-align: center;
 
   color: #888;
   background-color: #111b21;
 `;
+export const Header = styled.div`
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  background-color: #1f2428;
+  border-bottom: 1px black solid;
+  color: #6fb3f9;
+  height: 50px;
+  width: -webkit-fill-available;
+`;
 export const MessageContainer = styled.div`
-  padding-bottom: 80px;
-  margin-left: 30vw;
   display: flex;
   flex-direction: column;
+  padding: 2vw;
   color: #888;
   background-color: #111b21;
-  justify-content: flex-end;
+  margin: 50px 0px 50px 0px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+interface MessageBoxProps {
+  isIncoming: boolean;
+}
+
+export const MessageBox = styled.div<MessageBoxProps>`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-self: ${(props) => (props.isIncoming ? "flex-start" : "flex-end")};
+  justify-content: flex-start;
+  border: #727a86 solid 1px;
+  border-radius: 16px;
+  transition: all 0.5s;
+  min-width: 40px;
+  max-width: 650px;
+  background: ${(props) => (props.isIncoming ? "#212E36" : "#00A884")};
+  padding: 10px 10px 10px 10px;
+  margin: 10px 10px 10px 10px;
+  color: #f0f3f6;
+
+  & a {
+    color: #6fb3f9;
+  }
+  & img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
+`;
+export const LoginPageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100vw;
 `;
 export const StyledLoginForm = styled.form`
   display: flex;
@@ -30,7 +78,6 @@ export const StyledLoginForm = styled.form`
   padding: 2rem;
   text-align: center;
   padding: 2em;
-
   color: #888;
   background-color: #233138;
 `;
@@ -38,13 +85,6 @@ export const StyledLink = styled.a`
   font-weight: 500;
   color: #69aaed;
   text-decoration: none;
-  text-decoration: inherit;
-  &:hover {
-    text-decoration: underline;
-    color: #535bf2;
-  }
-`;
-export const StyledText = styled.p`
   color: #e4e8ec;
 `;
 export const StyledTitel = styled.h1`
@@ -54,7 +94,6 @@ export const StyledTitel = styled.h1`
 `;
 export const StyledButton = styled.button`
   border-radius: 8px;
-  max-height: 40px;
   border: 1px solid transparent;
   font-size: 1em;
   font-weight: 500;
@@ -72,15 +111,35 @@ export const StyledButton = styled.button`
     outline: 4px auto -webkit-focus-ring-color;
   }
 `;
-
-interface AvatarProps {
-  src: string;
-}
-
-export const Avatar = styled.img<AvatarProps>`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+export const SendButton = styled.button`
+  background-color: #128c7e;
+  color: #fff;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  &:hover {
+    border-color: #fff;
+  }
+  &:focus,
+  &:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+`;
+export const InputField = styled.input`
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+`;
+export const Footer = styled.div`
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  margin: 12px;
+  flex-direction: row;
+  width: -webkit-fill-available;
 `;
 
 interface ItemProps {
@@ -89,25 +148,32 @@ interface ItemProps {
 
 export const List = styled.ul`
   display: flex;
-  gap: 10px;
   flex-direction: column;
-  }`;
-
+  padding: 0;
+`;
 export const StyledSidebar = styled.div`
   position: fixed;
-  left: 0;
-  width: 30vw;
+  width: 348px;
   height: 100vh;
   border: 1px solid black;
-  top: 0;
+  left: 0;
   background-color: #1f2428;
-  overflow: hidden;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
+export const UserForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+export const UserBox = styled.div``;
 
 export const Item = styled.li<ItemProps>`
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
 
   background-color: #1f2428;
   height: 50px;
@@ -117,7 +183,7 @@ export const Item = styled.li<ItemProps>`
   /* border: #727a86 solid 1px; */
   border-radius: 8px;
   padding: 5px;
-  margin: 5px 15px 5px 5px;
+  margin: 15px;
   overflow: hidden;
 
   &:hover {
@@ -125,57 +191,30 @@ export const Item = styled.li<ItemProps>`
     transform: scale(1.01);
     transition: all 0.3s;
   }
+  &.active::after {
+    content: "";
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    background-color: #00a884;
+  }
 `;
 
-interface UserCardProps {
-  children: ReactNode;
-  isVisible: boolean;
-}
 export const ChatContainer = styled.div`
   display: flex;
-  flex-direction: column-reverse;
-  width: 100vw;
+  flex-direction: column;
+  justify-content: flex-end;
   height: 100vh;
-  overflow: auto;
+  width: 74vw;
   background-color: #111b21;
+  overflow: auto;
+  margin-left: 350px;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-export const MessageBox = styled.div<UserCardProps>`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  border: #727a86 solid 1px;
-  border-radius: 16px;
-
-  transition: all 0.5s;
-  opacity: ${(props) => (props.isVisible ? 1 : 0)};
-  min-width: 400px;
-  width: fit-content;
-  height: fit-content;
-  background: #0a0c10;
-  padding: 10px 10px 10px 10px;
-  color: #f0f3f6;
-
-  & a {
-    color: #6fb3f9;
-  }
-  & img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-  }
-`;
-interface SearchWrapperProps {
-  children: React.ReactNode;
-}
 
 export const StyledForm = styled.form`
   position: fixed;
@@ -186,26 +225,15 @@ export const StyledForm = styled.form`
   gap: 10px;
   flex-direction: row;
   width: 70vw;
-
   background-color: #1f2428;
   margin-left: 2px;
 `;
 
-export const SearchWrapper = styled.div<SearchWrapperProps>`
-  width: 100vw;
-  border-bottom: 1px solid #7a828e;
-  background-color: #010409;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 50px;
-  padding: 50px 0 50px 0;
-`;
 export const SearchInput = styled.input`
   flex-grow: 100;
   background-color: transparent;
   border: 1px solid #7a828e;
+  margin-top: 2vw;
   border-radius: 5px;
   padding: 13px 10px 14px;
   font-style: normal;
@@ -218,56 +246,6 @@ export const SearchInput = styled.input`
 
 export const StyledBody = styled.body`
   background-color: #242424;
-`;
-
-export const Avatarblock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-export const StyledDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-const loading = keyframes`
-  0% {
-    content: "Загрузка";
-  }
-  25% {
-    content: "Загрузка.";
-  }
-  50% {
-    content: "Загрузка..";
-  }
-  75% {
-    content: "Загрузка...";
-  }
-`;
-
-export const StyledLoading = styled.div`
-  position: fixed;
-  top: 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: #6fb3f9;
-  width: 200px;
-  height: 200px;
-
-  &:before {
-    content: "Загрузка";
-    animation: ${loading} 2s linear infinite;
-    text-align: center;
-    width: 100%;
-    height: auto;
-    display: block;
-    font-size: 48px;
-    color: #39d353;
-    margin-top: -50px;
-  }
 `;
 
 export const StyledErrorMessage = styled.a`
@@ -296,8 +274,12 @@ export const StyledErrorMessage = styled.a`
 `;
 
 export const StyledTextError = styled.p`
-  position: fixed;
-  top: 25%;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
   color: #e34c26;
   font-size: 16px;
+  transition: all ease 0.3s;
+  margin: 0;
+  padding-left: 2vw;
 `;

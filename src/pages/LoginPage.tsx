@@ -9,7 +9,11 @@ import {
   setIdInstance,
   setPhoneNumber,
 } from "../store/reducers/userSlice";
-import { StyledButton, StyledLoginForm } from "../Styles/styles";
+import {
+  LoginPageContainer,
+  StyledButton,
+  StyledLoginForm,
+} from "../Styles/styles";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -69,33 +73,35 @@ const LoginPage = () => {
   };
 
   return (
-    <StyledLoginForm onSubmit={handleSubmit}>
-      <label>
+    <LoginPageContainer>
+      <StyledLoginForm onSubmit={handleSubmit}>
+        <label>
+          <input
+            type="text"
+            value={idInstance}
+            onChange={handleIdChange}
+            placeholder="idInstance"
+          />
+          {wrongIdInstance && <p>{wrongIdInstance}</p>}
+        </label>
         <input
           type="text"
-          value={idInstance}
-          onChange={handleIdChange}
-          placeholder="idInstance"
+          value={apiTokenInstance}
+          onChange={(e) => setApiTokenInstances(e.target.value)}
+          placeholder="apiTokenInstance"
         />
-        {wrongIdInstance && <p>{wrongIdInstance}</p>}
-      </label>
-      <input
-        type="text"
-        value={apiTokenInstance}
-        onChange={(e) => setApiTokenInstances(e.target.value)}
-        placeholder="apiTokenInstance"
-      />
-      <label>
-        <input
-          type="text"
-          value={phoneNumber}
-          onChange={handlePhoneChange}
-          placeholder="Phone Number"
-        />
-        {wrongPhoneNumber && <p>{wrongPhoneNumber}</p>}
-      </label>
-      <StyledButton type="submit">Войти</StyledButton>
-    </StyledLoginForm>
+        <label>
+          <input
+            type="text"
+            value={phoneNumber}
+            onChange={handlePhoneChange}
+            placeholder="Phone Number"
+          />
+          {wrongPhoneNumber && <p>{wrongPhoneNumber}</p>}
+        </label>
+        <StyledButton type="submit">Войти</StyledButton>
+      </StyledLoginForm>
+    </LoginPageContainer>
   );
 };
 export default LoginPage;

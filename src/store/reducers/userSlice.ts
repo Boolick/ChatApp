@@ -3,15 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface User {
   idInstance: number;
   apiTokenInstance: string;
- phoneNumber: number;
- currentUser: string;
+  phoneNumber: number | null;
+  currentUser: string;
   message: string;
 }
 
 const initialState: User = {
   idInstance: 0,
   apiTokenInstance: "",
-  phoneNumber: 0,
+  phoneNumber: null,
   currentUser: "",
   message: "",
 };
@@ -35,7 +35,11 @@ const userSlice = createSlice({
   },
 });
 
-export const { setIdInstance, setApiTokenInstance, setPhoneNumber, setCurrentUser } =
-  userSlice.actions;
+export const {
+  setIdInstance,
+  setApiTokenInstance,
+  setPhoneNumber,
+  setCurrentUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;
