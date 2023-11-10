@@ -29,8 +29,8 @@
 6. Введите учетные данные GREEN-API (idInstance, apiTokenInstance) и начните отправку и получение сообщений через WhatsApp.
 
 ## Скриншоты
-
- 
+![image](https://github.com/Boolick/WhatsAppy/assets/79834650/f9864cd8-8533-43cd-a1c3-a35e16f7323a)
+![image](https://github.com/Boolick/WhatsAppy/assets/79834650/b2e954aa-bb23-4259-93ec-0a0961e7caa4)
 
 ## Контакты
 
