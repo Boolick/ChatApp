@@ -1,4 +1,4 @@
-async function checkWhatsApp(
+/* async function checkWhatsApp(
   phoneNumber: number,
   idInstance: number,
   apiTokenInstance: string
@@ -21,3 +21,4 @@ async function checkWhatsApp(
 }
 
 export default checkWhatsApp;
+ Проверка номера перед добавлением в список чатов*/
