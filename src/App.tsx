@@ -12,7 +12,7 @@ function App() {
       <Provider store={store}>
         <Routes>
           <Route path="/chat" element={<Chat />} />
-          <Route path="/login-page" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
         </Routes>
       </Provider>
     </>
