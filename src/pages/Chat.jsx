@@ -116,7 +116,6 @@ function Chat() {
       chatId,
       message: newMessage,
     });
-
     setNewMessage("");
   };
 

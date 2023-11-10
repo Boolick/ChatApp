@@ -13,16 +13,15 @@ import {
   LoginPageContainer,
   StyledButton,
   StyledLoginForm,
+  StyledTextError,
 } from "../Styles/styles";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [idInstance, setIdInstances] = useState<number>(7103858998);
-  const [apiTokenInstance, setApiTokenInstances] = useState(
-    "d7cb43057842413c9b1ac50f79bf5d316b4f078a52ac4b52bf"
-  );
-  const [phoneNumber, setInputValue] = useState(84359237442);
+  const [idInstance, setIdInstances] = useState<number | null>();
+  const [apiTokenInstance, setApiTokenInstances] = useState("");
+  const [phoneNumber, setInputValue] = useState<number | null>();
   const [wrongPhoneNumber, setWrongPhoneNumber] = useState("");
   const [wrongIdInstance, setWrongIdInstance] = useState("");
 
@@ -65,7 +64,7 @@ const LoginPage = () => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (isNaN(value)) {
-      setWrongPhoneNumber("Номер телефона должен быть числом");
+      setWrongPhoneNumber("Тут должно быть число");
     } else {
       setWrongPhoneNumber("");
       setInputValue(Number(e.target.value));
@@ -78,12 +77,15 @@ const LoginPage = () => {
         <label>
           <input
             type="text"
-            value={idInstance}
+            value={idInstance !== null ? idInstance : ""}
             onChange={handleIdChange}
             placeholder="idInstance"
           />
-          {wrongIdInstance && <p>{wrongIdInstance}</p>}
+          {wrongIdInstance && (
+            <StyledTextError>{wrongIdInstance}</StyledTextError>
+          )}
         </label>
+
         <input
           type="text"
           value={apiTokenInstance}
@@ -93,11 +95,13 @@ const LoginPage = () => {
         <label>
           <input
             type="text"
-            value={phoneNumber}
+            value={phoneNumber !== null ? phoneNumber : ""}
             onChange={handlePhoneChange}
             placeholder="Phone Number"
           />
-          {wrongPhoneNumber && <p>{wrongPhoneNumber}</p>}
+          {wrongPhoneNumber && (
+            <StyledTextError>{wrongPhoneNumber}</StyledTextError>
+          )}
         </label>
         <StyledButton type="submit">Войти</StyledButton>
       </StyledLoginForm>
